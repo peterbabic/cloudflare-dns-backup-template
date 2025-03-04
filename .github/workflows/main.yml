@@ -1,0 +1,42 @@
+name: Cloudflare DNS Backup
+
+on:
+  workflow_dispatch: 
+  schedule:
+  - cron: "40 0 * * 0"
+
+jobs:
+  backup:
+    runs-on: ubuntu-22.04
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+
+    - run: |
+        # Create backup directory
+        mkdir -p dns-backups
+        
+        # Get list of zones (domains)
+        zones=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones" \
+          -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+          -H "Content-Type: application/json" | jq -r '.result[].id')
+        
+        # Loop through zones and backup DNS records
+        for zone in $zones; do
+          # Get zone name
+          zone_name=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$zone" \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            -H "Content-Type: application/json" | jq -r '.result.name')
+          
+          echo "Backing up DNS records for $zone_name"
+          
+          # Get DNS records and save to file
+          curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$zone/dns_records" \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            -H "Content-Type: application/json" | jq > "dns-backups/$zone_name.json"
+        done
+
+    - if: ${{ !env.ACT }}
+      uses: stefanzweifel/git-auto-commit-action@v5
