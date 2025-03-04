@@ -12,7 +12,6 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
 
     - run: |
         # Create backup directory
@@ -38,5 +37,4 @@ jobs:
             -H "Content-Type: application/json" | jq > "dns-backups/$zone_name.json"
         done
 
-    - if: ${{ !env.ACT }}
-      uses: stefanzweifel/git-auto-commit-action@v5
+    - uses: stefanzweifel/git-auto-commit-action@v5
