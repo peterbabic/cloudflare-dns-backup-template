@@ -1,6 +1,10 @@
 # Cloudflare DNS backup template
 
-Backups will be created in folder `dns-backups/domain.tld.jsom`.
+This is a repository that is mentioned in my
+[blog post](https://peterbabic.dev/blog/cloudflare-dns-backup-action/).
+
+After setting up, Cloudflare DNS backups will be created in folder
+`dns-backups/domain.tld.jsom`.
 
 ## Instructions
 
@@ -134,6 +138,13 @@ token (PAT) with write permissions for a specific repository.
 Note that `GITHUB_TOKEN` is automatically injected for Actions running via
 Github. Filling in `GITHUB_TOKEN` secret is only needed when action is being run
 via `act`.
+
+## Links
+
+- <https://developers.cloudflare.com/fundamentals/api/how-to/make-api-calls/>
+- <https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#fine-grained-personal-access-tokens>
+- <https://github.com/stefanzweifel/git-auto-commit-action#usage>
+- <https://nektosact.com/usage/runners.html#runners>
 
 ## MIT License
 
